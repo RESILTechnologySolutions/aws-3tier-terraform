@@ -91,4 +91,3 @@ Before running:
 To stop ongoing AWS costs after testing:
 
     terraform destroy
-
