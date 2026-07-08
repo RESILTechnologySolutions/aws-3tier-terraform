@@ -12,3 +12,18 @@ resource "aws_subnet" "public" {
     Tier    = "public"
   }
 }
+
+resource "aws_subnet" "private_app" {
+  count = 2
+
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_app_subnet_cidrs[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = false
+
+  tags = {
+    Name    = "${var.project_name}-private-app-${count.index + 1}"
+    Project = var.project_name
+    Tier    = "private-app"
+  }
+}
