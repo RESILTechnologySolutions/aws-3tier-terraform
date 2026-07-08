@@ -91,3 +91,37 @@ Before running:
 To stop ongoing AWS costs after testing:
 
     terraform destroy
+## Phase 2: Remote Terraform State
+
+Terraform state is Terraform's record of the AWS resources it manages. This project uses remote state so the infrastructure record is not stored only on one local machine.
+
+### Remote State Design
+
+| Component | Purpose | Security / Reliability Reason |
+|---|---|---|
+| S3 bucket | Stores the Terraform state file | Keeps state centralized and durable |
+| S3 versioning | Keeps previous versions of the state file | Helps recover from accidental corruption or deletion |
+| S3 encryption | Encrypts the state file at rest | Protects sensitive infrastructure data |
+| S3 block public access | Prevents public access to the state bucket | Terraform state must never be public |
+| S3 lockfile | Locks the state during Terraform operations | Prevents simultaneous Terraform runs from modifying state |
+| DynamoDB table | Created during the original remote state setup | Kept as part of the project history, but the active backend uses S3 native locking |
+
+### Backend Configuration
+
+The main Terraform environment uses this backend:
+
+    bucket       = "resil-aws-3tier-terraform-state-271251458153"
+    key          = "envs/portfolio/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
+
+### Why Remote State Matters
+
+Remote state is important because Terraform must know which real AWS resources belong to the code. Without state, Terraform cannot safely compare the code against the live infrastructure.
+
+Remote state also makes the project more production-style because it supports shared workflows, safer collaboration, state recovery, and controlled infrastructure changes.
+
+### State Security Note
+
+Terraform state can contain sensitive infrastructure details. For that reason, the state bucket blocks public access, uses encryption, and should only be accessible to trusted IAM principals.
