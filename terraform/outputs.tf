@@ -52,3 +52,13 @@ output "isolated_db_route_table_id" {
   description = "ID of the isolated database route table."
   value       = aws_route_table.isolated_db.id
 }
+
+output "nat_gateway_id" {
+  description = "ID of the NAT Gateway used for private outbound internet access."
+  value       = aws_nat_gateway.main.id
+}
+
+output "nat_eip_public_ip" {
+  description = "Public IP address assigned to the NAT Gateway Elastic IP."
+  value       = aws_eip.nat.public_ip
+}
