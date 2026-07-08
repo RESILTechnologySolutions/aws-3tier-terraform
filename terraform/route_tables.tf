@@ -36,3 +36,20 @@ resource "aws_route_table_association" "private_app" {
   subnet_id      = aws_subnet.private_app[count.index].id
   route_table_id = aws_route_table.private_app.id
 }
+
+resource "aws_route_table" "isolated_db" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name    = "${var.project_name}-isolated-db-rt"
+    Project = var.project_name
+    Tier    = "isolated-db"
+  }
+}
+
+resource "aws_route_table_association" "isolated_db" {
+  count = 2
+
+  subnet_id      = aws_subnet.isolated_db[count.index].id
+  route_table_id = aws_route_table.isolated_db.id
+}

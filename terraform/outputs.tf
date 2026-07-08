@@ -47,3 +47,8 @@ output "private_app_route_table_id" {
   description = "ID of the private application route table."
   value       = aws_route_table.private_app.id
 }
+
+output "isolated_db_route_table_id" {
+  description = "ID of the isolated database route table."
+  value       = aws_route_table.isolated_db.id
+}
