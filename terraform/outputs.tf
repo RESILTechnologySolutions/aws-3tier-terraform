@@ -32,3 +32,8 @@ output "isolated_db_subnet_ids" {
   description = "IDs of the isolated database subnets."
   value       = aws_subnet.isolated_db[*].id
 }
+
+output "internet_gateway_id" {
+  description = "ID of the Internet Gateway attached to the VPC."
+  value       = aws_internet_gateway.main.id
+}
