@@ -12,3 +12,8 @@ output "vpc_cidr" {
   description = "CIDR block assigned to the VPC."
   value       = var.vpc_cidr
 }
+
+output "vpc_id" {
+  description = "ID of the project VPC."
+  value       = aws_vpc.main.id
+}
